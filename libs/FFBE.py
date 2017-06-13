@@ -35,10 +35,20 @@ class Menu(FFBEBase):
         super().__init__()
         self.app_i = MenuIs.get("app")
         self.main_i = MenuIs.get("main")
+        self.isnt_responding_i = MenuIs.get("isnt_responding")
+        self.launcher_stop_i = MenuIs.get("launcher_stop")
+        self.ok_i = MenuIs.get("ok")
 
     def start(self):
         self.app_i.search_click(3)
         for _ in range(30):
+            try:
+                self.launcher_stop_i.search()
+                self.ok_i.search_click(3)
+                self.app_i.search_click(3)
+                self.main_i.search(30)  #
+            except ImageException:
+                pass
             try:
                 self.main_i.search()
                 break
@@ -349,7 +359,7 @@ class Dungeon(FFBEBase):
 
     def depart(self):
         try:
-            self.adventure_i.search_click(3)
+            self.adventure_i.search_click(5)
         except ImageException:
             self.b_daily_quest_close_i.search_click()
             self.adventure_i.search_click(3)
