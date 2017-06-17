@@ -35,15 +35,15 @@ class Menu(FFBEBase):
         super().__init__()
         self.app_i = MenuIs.get("app")
         self.main_i = MenuIs.get("main")
-        self.isnt_responding_i = MenuIs.get("isnt_responding")
-        self.launcher_stop_i = MenuIs.get("launcher_stop")
-        self.ok_i = MenuIs.get("ok")
+        self.isnt_responding_i = MemuIs.get("isnt_responding")
+        self.launcher_stop_i = MemuIs.get("launcher_stop")
+        self.ok_i = MemuIs.get("ok")
 
     def start(self):
         self.app_i.search_click(3)
         for _ in range(30):
             try:
-                self.launcher_stop_i.search()
+                self.isnt_responding_i.search()
                 self.ok_i.search_click(3)
                 self.app_i.search_click(3)
                 self.main_i.search(30)  #
@@ -181,7 +181,6 @@ class Battle(FFBEBase):
                 self.cooldown()
         except ImageException:
             pass
-
 
     def repeat(self):
         self.cooldown()
@@ -350,9 +349,9 @@ class Dungeon(FFBEBase):
 
     def _depart_rank(self):
         try:
-            self.rank_i.search_click(5)
+            self.rank_i.search_click(10)
         except ImageException:
-            self.next_i.search_click(5)
+            self.next_i.search_click(10)
             self.rank_i.search_click(5)
         self.manage_items_i.search(10)
         self.depart_i.search_click(5)
@@ -362,7 +361,7 @@ class Dungeon(FFBEBase):
             self.adventure_i.search_click(5)
         except ImageException:
             self.b_daily_quest_close_i.search_click()
-            self.adventure_i.search_click(3)
+            self.adventure_i.search_click(5)
         try:
             self.next_i.search_click(3)
         except ImageException:
@@ -399,7 +398,7 @@ class Dungeon(FFBEBase):
 
     def results(self):
         # try:
-        self.r_gil_i.search_click(10)
+        self.r_gil_i.search_click(30)
         # except ImageException:
         #     self.r_error_ok.search_click(5)
         #     self.r_gil_i.search_click(5)
