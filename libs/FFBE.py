@@ -6,6 +6,7 @@ MemuIs = Images("png\\memu\\%s.png")
 
 ArenaIs = Images("png\\ffbe\\arena\\%s.png")
 SummonIs = Images("png\\ffbe\\summon\\%s.png")
+UnitIs = Images("png\\ffbe\\unit\\%s.png")
 
 AbilityIs = Images("png\\ffbe\\ability\\%s.png")
 
@@ -130,10 +131,12 @@ class Battle(FFBEBase):
         self.tm_ok_i = Is.get("tm_ok")
         self.ffbe_app_i = Is.get("ffbe_app")
 
-        self.pos_ary = []
+        self.pos_arr = []
+        self.is_arr = []
 
         for i in range(6):
-            self.pos_ary.append(Pixel())
+            self.is_arr.append(Images("png\\ffbe\\ability\\%s.png"))
+            self.pos_arr.append(Pixel())
         self.lower_drag_pix = Pixel()
         self.upper_drag_pix = Pixel()
 
@@ -147,15 +150,15 @@ class Battle(FFBEBase):
         self.auto_i.search(5)
         y = 300
         for i in range(3):
-            assert isinstance(self.pos_ary[i], Pixel)
-            self.pos_ary[i].x = self.auto_i.x
-            self.pos_ary[i].y = self.auto_i.y - y
+            assert isinstance(self.pos_arr[i], Pixel)
+            self.pos_arr[i].x = self.auto_i.x
+            self.pos_arr[i].y = self.auto_i.y - y
             y -= 100
         y = 300
         for i in range(3, 6):
-            assert isinstance(self.pos_ary[i], Pixel)
-            self.pos_ary[i].x = self.auto_i.x + 250
-            self.pos_ary[i].y = self.auto_i.y - y
+            assert isinstance(self.pos_arr[i], Pixel)
+            self.pos_arr[i].x = self.auto_i.x + 250
+            self.pos_arr[i].y = self.auto_i.y - y
             y -= 100
         self.lower_drag_pix.x = self.auto_i.x + 210
         self.lower_drag_pix.y = self.auto_i.y - 60
@@ -163,7 +166,7 @@ class Battle(FFBEBase):
         self.upper_drag_pix.y = self.auto_i.y - 260
 
     def get_pos_pix(self, pos_int) -> Pixel:
-        return self.pos_ary[pos_int]
+        return self.pos_arr[pos_int]
 
     def auto(self):
         self.auto_i.search_click(20)
@@ -187,20 +190,20 @@ class Battle(FFBEBase):
         self.repeat_i.search_click(40)
 
     def engage(self, pos_int):
-        assert isinstance(self.pos_ary[pos_int], Pixel)
-        self.pos_ary[pos_int].click()
+        assert isinstance(self.pos_arr[pos_int], Pixel)
+        self.pos_arr[pos_int].click()
 
     def engage_all(self):
-        for pos_pix in self.pos_ary:
+        for pos_pix in self.pos_arr:
             assert isinstance(pos_pix, Pixel)
             pos_pix.click()
 
     def guard(self, pos_int):
-        assert isinstance(self.pos_ary[pos_int], Pixel)
-        self.pos_ary[pos_int].drag(y=150)
+        assert isinstance(self.pos_arr[pos_int], Pixel)
+        self.pos_arr[pos_int].drag(y=150)
 
     def guard_all(self):
-        for pos_pix in self.pos_ary:
+        for pos_pix in self.pos_arr:
             assert isinstance(pos_pix, Pixel)
             pos_pix.drag(y=150)
 
@@ -208,10 +211,10 @@ class Battle(FFBEBase):
         pos_pix = self.get_pos_pix(pos_int)
         pos_pix.drag(x=150)
         self.mp_i.search(2)
-        self._ability(scroll_y_int, ability_str, cast_to_int)
+        self._ability(pos_int, scroll_y_int, ability_str, cast_to_int)
 
-    def _ability(self, scroll_y_int=0, ability_str=None, cast_to_int=None):
-        ability_i = AbilityIs.get(ability_str)
+    def _ability(self, pos_int, scroll_y_int=0, ability_str=None, cast_to_int=None):
+        ability_i = self.is_arr[pos_int].get(ability_str)
         self.scroll_y(scroll_y_int)
         try:
             ability_i.search_click(3)
@@ -241,9 +244,9 @@ class Battle(FFBEBase):
             scroll_y_3_int=0, ability_2_str=None, cast_to_2_int=None
     ):
         self.ability(pos_int, scroll_y_int, dual_ability_str)
-        self._ability(scroll_y_2_int, ability_str, cast_to_int)
+        self._ability(pos_int, scroll_y_2_int, ability_str, cast_to_int)
         if ability_2_str is None:
-            ability_i = AbilityIs.get(ability_str)
+            ability_i = self.is_arr[pos_int].get(ability_str)
             ability_i.click()
             self.cooldown()
             if cast_to_int is not None:
@@ -252,7 +255,7 @@ class Battle(FFBEBase):
                 cast_to_pix.click()
                 self.cooldown()
         else:
-            self._ability(scroll_y_3_int, ability_2_str, cast_to_2_int)
+            self._ability(pos_int, scroll_y_3_int, ability_2_str, cast_to_2_int)
 
     def scroll_y(self, y: int):
         if y > 0:
@@ -340,6 +343,7 @@ class Dungeon(FFBEBase):
 
         self.r_unit_exp_2 = ResultsIs.get("unit_exp_2")
         self.r_items_obtained = ResultsIs.get("items_obtained")
+        self.r_items_obtained = ResultsIs.get("units_obtained")
         self.r_next_2 = ResultsIs.get("next_2")
         self.r_dont_request = ResultsIs.get("dont_request")
 
@@ -406,6 +410,7 @@ class Dungeon(FFBEBase):
         self.r_unit_exp.search_click(2)
         self.r_next.search_click(2)
         self.r_unit_exp_2.search_click_clear(10)  # "Level up" would require 2 clicks
+        # self.r_items_obtained.search_click(5)
         self.r_items_obtained.search_click(5)
         self.r_next_2.search_click(5)
         try:

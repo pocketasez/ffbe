@@ -11,7 +11,7 @@ class Run(Main):
 
     def main(self):
         # self.memu.taskbar_pin_img.search_click()
-        summon_img = Image("png\\ffbe\\summon\\summon_raid.png")
+        summon_img = Image("png\\ffbe\\summon\\summon.png")
         next_img = Image("png\\ffbe\\summon\\next.png")
         try:
             while True:
@@ -25,13 +25,13 @@ class Run(Main):
                         break
                     except ImageException:
                         summon_img.click()
-                time.sleep(1)
-                while True:
-                    try:
-                        next_img.search_click()
-                        break
-                    except ImageException:
-                        summon_img.click()
+                # time.sleep(1)
+                # while True:
+                #     try:
+                #         next_img.search_click()
+                #         break
+                #     except ImageException:
+                #         summon_img.click()
 
         except ImageException:
             screenshot_ts()

@@ -35,24 +35,46 @@ class Pixel(object):
 
 
 class Image(Pixel):
+
     def __init__(self, path: str, cooldown=1.0, confidence=0.9):
         super().__init__()
         self.path = path
         self.x = 0
         self.y = 0
+        self.padding = 100
         self.cooldown = cooldown
         self.confidence = confidence
 
+        self.region_cache = None
+
     def search_once(self):
-        try:
-            Log.debug("Image.search_once: Searching for %s", self.path)
-            self.x, self.y = pyautogui.locateCenterOnScreen(
-                self.path, confidence=self.confidence
-            )
-        except TypeError:
-            Log.debug("Image.search_once: %s not found. Cooling down for %d", self.path, self.cooldown)
-            time.sleep(self.cooldown)
-            raise ImageException
+        if self.region_cache is None:
+            try:
+                Log.debug("Image.search_once: Searching for %s", self.path)
+                x, y, size_x, size_y = pyautogui.locateOnScreen(
+                    self.path, confidence=self.confidence
+                )
+                self.x = x + int(size_x/2)
+                self.y = y + int(size_y/2)
+                self.region_cache = (
+                    x - self.padding,
+                    y - self.padding,
+                    x + size_x + self.padding,
+                    y + size_y + self.padding,
+                )
+            except TypeError:
+                Log.debug("Image.search_once: %s not found. Cooling down for %d", self.path, self.cooldown)
+                time.sleep(self.cooldown)
+                raise ImageException
+        else:
+            try:
+                _, _, _, _ = pyautogui.locateOnScreen(
+                    self.path, confidence=self.confidence, region=self.region_cache,
+                )
+            except TypeError:
+                Log.debug("Image.search_once: %s not found. Cooling down for %d", self.path, self.cooldown)
+                time.sleep(self.cooldown)
+                raise ImageException
 
     def search(self, attempts=1):
         for i in range(attempts):
@@ -64,6 +86,9 @@ class Image(Pixel):
                 pass
         Log.info('Image.search: %s not found after %i attempts', self.path, attempts)
         raise ImageException
+
+    def search_all(self, max:int):
+        pass
 
     def clear(self):
         try:
@@ -97,6 +122,7 @@ class Image(Pixel):
                 return
             except ImageException:
                 pass
+
 
 class Images(object):
     def __init__(self, path_format: str):
