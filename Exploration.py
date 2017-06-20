@@ -21,7 +21,7 @@ class FFBEMain(Main):
                         self.exp.nw()
                         self.exp.se()
                 except ImageException:
-                    Log.info("Battle %i of %i", i, zone_1)
+                    logging.info("Battle %i of %i", i, zone_1)
                     self.battle.setup()
                     self.battle.ability(2, -100, "waylay")
                     self.battle.dual_black_magic(4, -400, 310, "osmose", -10, "thundaga")
@@ -31,7 +31,7 @@ class FFBEMain(Main):
                     self.items_img.search_click(40)
                     self.battle.cooldown(2)
         except ImageException:
-            Log.warn("STOPPED on %i of %i", i, zone_1)
+            logging.warning("STOPPED on %i of %i", i, zone_1)
             screenshot_ts()
 
 if __name__ == '__main__':

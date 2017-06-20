@@ -1,4 +1,5 @@
 from libs.FFBE import *
+from libs.Core import *
 # Have on Menu -> Auto continuous battle = False, Auto burst = True
 
 

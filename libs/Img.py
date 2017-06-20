@@ -1,6 +1,6 @@
 import pyautogui
-
-from libs.Core import *
+import logging
+import time
 
 
 class ImageException(Exception):
@@ -17,7 +17,7 @@ class Pixel(object):
         self.y = y
 
     def click(self):
-        Log.info("Pixel.click: Clicking on (%i,%i)", self.x, self.y)
+        logging.info("Pixel.click: Clicking on (%i,%i)", self.x, self.y)
         pyautogui.click(self.x, self.y)
 
     def drag(self, x=0, y=0):
@@ -50,7 +50,7 @@ class Image(Pixel):
     def search_once(self):
         if self.region_cache is None:
             try:
-                Log.debug("Image.search_once: Searching for %s", self.path)
+                logging.debug("Image.search_once: Searching for %s", self.path)
                 x, y, size_x, size_y = pyautogui.locateOnScreen(
                     self.path, confidence=self.confidence
                 )
@@ -63,7 +63,7 @@ class Image(Pixel):
                     y + size_y + self.padding,
                 )
             except TypeError:
-                Log.debug("Image.search_once: %s not found. Cooling down for %d", self.path, self.cooldown)
+                logging.debug("Image.search_once: %s not found. Cooling down for %d", self.path, self.cooldown)
                 time.sleep(self.cooldown)
                 raise ImageException
         else:
@@ -72,7 +72,7 @@ class Image(Pixel):
                     self.path, confidence=self.confidence, region=self.region_cache,
                 )
             except TypeError:
-                Log.debug("Image.search_once: %s not found. Cooling down for %d", self.path, self.cooldown)
+                logging.debug("Image.search_once: %s not found. Cooling down for %d", self.path, self.cooldown)
                 time.sleep(self.cooldown)
                 raise ImageException
 
@@ -80,11 +80,11 @@ class Image(Pixel):
         for i in range(attempts):
             try:
                 self.search_once()
-                Log.info('Image.search: Found %s on attempt %i', self.path, i + 1)
+                logging.info('Image.search: Found %s on attempt %i', self.path, i + 1)
                 return
             except ImageException:
                 pass
-        Log.info('Image.search: %s not found after %i attempts', self.path, attempts)
+        logging.info('Image.search: %s not found after %i attempts', self.path, attempts)
         raise ImageException
 
     def search_all(self, max:int):
@@ -106,7 +106,7 @@ class Image(Pixel):
         try:
             self.search()
         except ImageException:
-            Log.info('Image.click_clear: %s disappeared', self.path)
+            logging.info('Image.click_clear: %s disappeared', self.path)
         else:
             raise ImageException
 
