@@ -11,7 +11,7 @@ class Run(Main):
         dungeon = Dungeon()
         battle = Battle()
 
-        dungeon.adventure_i = DepartureIs.get("15_3")
+        dungeon.adventure_i = DepartureIs.get("1_2")
         try:
             while True:
                 dungeon.depart()

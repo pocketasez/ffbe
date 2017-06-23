@@ -1,4 +1,5 @@
 from libs.Img import *
+pyautogui.FAILSAFE = False
 
 Is = Images("png\\ffbe\\%s.png")
 MenuIs = Images("png\\ffbe\\menu\\%s.png")
@@ -343,7 +344,7 @@ class Dungeon(FFBEBase):
 
         self.r_unit_exp_2 = ResultsIs.get("unit_exp_2")
         self.r_items_obtained = ResultsIs.get("items_obtained")
-        self.r_items_obtained = ResultsIs.get("units_obtained")
+        # self.r_items_obtained = ResultsIs.get("units_obtained")
         self.r_next_2 = ResultsIs.get("next_2")
         self.r_dont_request = ResultsIs.get("dont_request")
 
@@ -402,7 +403,7 @@ class Dungeon(FFBEBase):
 
     def results(self):
         # try:
-        self.r_gil_i.search_click(30)
+        self.r_gil_i.search_click(60)
         # except ImageException:
         #     self.r_error_ok.search_click(5)
         #     self.r_gil_i.search_click(5)
@@ -411,10 +412,10 @@ class Dungeon(FFBEBase):
         self.r_next.search_click(2)
         self.r_unit_exp_2.search_click_clear(10)  # "Level up" would require 2 clicks
         # self.r_items_obtained.search_click(5)
-        self.r_items_obtained.search_click(5)
-        self.r_next_2.search_click(5)
+        self.r_items_obtained.search_click(15)
+        self.r_next_2.search_click(15)
         try:
-            self.r_dont_request.search_click(2)
+            self.r_dont_request.search_click(15)
         except ImageException:
             pass
 
