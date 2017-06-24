@@ -142,11 +142,11 @@ class Battle(FFBEBase):
         self.upper_drag_pix = Pixel()
 
     def ready_wait(self):
+        self.cooldown()
         self.repeat_i.search(50)
 
     def setup(self):
         self.cooldown()
-        self.repeat_i.search(40)
         self.repeat_i.search(40)
         self.auto_i.search(5)
         y = 300
@@ -187,8 +187,8 @@ class Battle(FFBEBase):
             pass
 
     def repeat(self):
-        self.cooldown()
         self.repeat_i.search_click(40)
+        self.cooldown()
 
     def engage(self, pos_int):
         assert isinstance(self.pos_arr[pos_int], Pixel)
@@ -415,7 +415,7 @@ class Dungeon(FFBEBase):
         self.r_items_obtained.search_click(15)
         self.r_next_2.search_click(15)
         try:
-            self.r_dont_request.search_click(15)
+            self.r_dont_request.search_click(3)
         except ImageException:
             pass
 
