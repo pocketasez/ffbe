@@ -403,7 +403,11 @@ class Dungeon(FFBEBase):
 
     def results(self):
         # try:
-        self.r_gil_i.search_click(60)
+        try:
+            self.r_gil_i.search_click(15)
+        except ImageException:
+            self.r_error_ok.search_click(3)
+            self.r_gil_i.search_click(15)
         # except ImageException:
         #     self.r_error_ok.search_click(5)
         #     self.r_gil_i.search_click(5)

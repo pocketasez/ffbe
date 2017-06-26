@@ -12,22 +12,19 @@ class Run(Main):
         battle = Battle()
 
         dungeon.adventure_i = DepartureIs.get("1_2")
-        try:
-            while True:
-                dungeon.depart()
+        while True:
+            dungeon.depart()
+            try:
+                battle.auto()
+                dungeon.results()
+            except ImageException:
+                menu.start()
                 try:
+                    battle.repeat_i.search(30)
                     battle.auto()
-                    dungeon.results()
                 except ImageException:
-                    menu.start()
-                    try:
-                        battle.repeat_i.search(30)
-                        battle.auto()
-                    except ImageException:
-                        battle.wait_end()
-                    dungeon.results()
-        except ImageException:
-            screenshot_ts()
+                    battle.wait_end()
+                dungeon.results()
 
 if __name__ == '__main__':
     m = Run()
