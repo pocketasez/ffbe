@@ -11,10 +11,10 @@ class Run(Main):
         dungeon = Dungeon()
         battle = Battle()
 
-        dungeon.adventure_i = DepartureIs.get("1_2")
+        dungeon.adventure_i = DepartureIs.get("1_3")
         while True:
-            dungeon.depart()
             try:
+                dungeon.depart()
                 battle.auto()
                 dungeon.results()
             except ImageException:

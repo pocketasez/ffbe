@@ -20,31 +20,32 @@ class Run(Main):
 
                 # self.battle.ability(0, -400, "provoke")
                 try:
-                    self.battle.ability(0, -400, "provoke")
+                    self.battle.ability(0, -400, "armor_eraser")
                 except ImageException:
                     pass
                 try:
-                    # self.battle.ability(1, -300, "thunder_flask")
-                    self.battle.ability(1, -300, "blizzard_flask")
+                    self.battle.ability(1, -370, "thunder_flask")
+                    # self.battle.ability(1, -300, "blizzard_flask")
                 except ImageException:
                     pass
                 try:
-                    self.battle.ability(2, -300, "blizzard_flask")
-                    # self.battle.ability(2, -300, "thunder_flask")
+                    # self.battle.ability(2, -300, "blizzard_flask")
+                    self.battle.ability(2, -320, "thunder_flask")
                 except ImageException:
                     pass
                 try:
-                    # self.battle.dual_black_magic(3, -400, 220, "meteor")
-                    self.battle.ability(3, -400, "aero_blitz")
+                    self.battle.dual_ability(3, -400, "dual_black_magic", 220, "meteor")
+                    # self.battle.ability(3, -200, "prism_heart")
                     # self.battle.ability(3, -400, "ice_blitz")
                 except ImageException:
                     pass
                 try:
-                    self.battle.ability(4, -400, "aero_blitz")
-                    # self.battle.dual_ability(4, -400, "dual_black_magic", 220, "meteor")
+                    # self.battle.ability(4, -200, "ice_age")
+                    self.battle.dual_ability(4, -400, "dual_black_magic", 220, "meteor")
                     # self.battle.ability(4, -200, "meteor")
                 except ImageException:
                     pass
+                # exit()
                 self.battle.engage_all()
                 for _ in range(100):
                     try:
@@ -58,7 +59,7 @@ class Run(Main):
                         pass
                 self.arena.results()
         except ImageException:
-            screenshot_ts()
+            pass
 
 
 if __name__ == '__main__':

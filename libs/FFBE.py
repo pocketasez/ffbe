@@ -37,6 +37,8 @@ class Menu(FFBEBase):
         super().__init__()
         self.app_i = MenuIs.get("app")
         self.main_i = MenuIs.get("main")
+        self.play_ok_i = MenuIs.get("play_ok")
+
         self.isnt_responding_i = MemuIs.get("isnt_responding")
         self.launcher_stop_i = MemuIs.get("launcher_stop")
         self.ok_i = MemuIs.get("ok")
@@ -57,6 +59,10 @@ class Menu(FFBEBase):
             except ImageException:
                 self.app_i.click()
         self.main_i.search_click_clear(3)
+        try:
+            self.play_ok_i.search_click_clear(30)
+        except ImageException:
+            pass
 
 
 class Exploration(FFBEBase):
@@ -148,6 +154,11 @@ class Battle(FFBEBase):
     def setup(self):
         self.cooldown()
         self.repeat_i.search(40)
+        time.sleep(1)
+        try:
+            self.repeat_i.search()
+        except ImageException:
+            self.repeat_i.search(40)
         self.auto_i.search(5)
         y = 300
         for i in range(3):
@@ -335,6 +346,8 @@ class Dungeon(FFBEBase):
         self.unit_data_i = DepartureIs.get("unit_data")
         self.unit_data_ok_i = DepartureIs.get("unit_data_ok")
 
+        self.m_crash_ok_i = MemuIs.get("crash_ok")
+
         self.b_repeat_i = BattleIs.get("repeat")
 
         self.r_gil_i = ResultsIs.get("gil")
@@ -365,8 +378,12 @@ class Dungeon(FFBEBase):
         try:
             self.adventure_i.search_click(5)
         except ImageException:
-            self.b_daily_quest_close_i.search_click()
-            self.adventure_i.search_click(5)
+            try:
+                self.b_daily_quest_close_i.search_click()
+                self.adventure_i.search_click(5)
+            except ImageException:
+                self.r_dont_request.search_click_clear(1)
+                self.adventure_i.search_click(5)
         try:
             self.next_i.search_click(3)
         except ImageException:
@@ -412,7 +429,12 @@ class Dungeon(FFBEBase):
         #     self.r_error_ok.search_click(5)
         #     self.r_gil_i.search_click(5)
         self.cooldown()
-        self.r_unit_exp.search_click(2)
+        try:
+            self.r_unit_exp.search_click(2)
+        except ImageException:
+            self.m_crash_ok_i.search_click(2)
+            self.cooldown()
+            self.r_unit_exp.search_click(2)
         self.r_next.search_click(2)
         self.r_unit_exp_2.search_click_clear(10)  # "Level up" would require 2 clicks
         # self.r_items_obtained.search_click(5)
