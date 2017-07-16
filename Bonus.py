@@ -5,40 +5,36 @@ from Main import *
 class Run(Main):
     def main(self):
         taskbar_pin_i = Image("png\\memu\\taskbar_pin.png")
-
-        taskbar_pin_i.search_click(3)
-
-        dungeon = Dungeon()
+        vargas_i = Image("png\\ffbe\\tmp\\holy_flame_vargas.png")
+        taskbar_pin_i.search_click()
+        menu = Menu()
         battle = Battle()
+        dungeon = Dungeon()
+        dungeon.adventure_i = DepartureIs.get("25_3")
         while True:
             dungeon.depart_bonus()
-
             battle.setup()
-            battle.dual_ability(
-                2, -400, "dual_black_magic",
-                400, "osmose", None,
-                -100, "meteor"
-            )
+
+            battle.ability(2, -200, "genesis")
             battle.engage_all()
 
             battle.repeat()
 
-            battle.repeat()
+            try:
+                battle.ready_wait()
+                vargas_i.search(3)
+            except ImageException:
+                battle.repeat()
+                battle.cooldown()
 
-            battle.setup()
-            battle.ability(0, -300, "deprotect")
-            battle.ability(1, -300, "imperil")
-            battle.dual_ability(
-                2, -400, "dual_black_magic",
-                220, "meteor"
-            )
-            battle.ability(3, -300, "deshell")
-            battle.ability(4, -350, "dark_nebula")
+            battle.ready_wait()
+            battle.ability(1, -400, "ravaging_blow")
+            battle.ability(2, -100, "destiny")
+            battle.ability(4, -300, "celestial_light", 1)
+            battle.engage(4)
             battle.engage_all()
 
-            battle.repeat()
-
-            dungeon.repeat_results()
+            dungeon.results()
 
 if __name__ == '__main__':
     m = Run()

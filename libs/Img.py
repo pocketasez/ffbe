@@ -36,7 +36,7 @@ class Pixel(object):
 
 class Image(Pixel):
 
-    def __init__(self, path: str, cooldown=1.0, confidence=0.9):
+    def __init__(self, path: str, cooldown=1.0, confidence=0.85):
         super().__init__()
         self.path = path
         self.x = 0
@@ -44,37 +44,20 @@ class Image(Pixel):
         self.padding = 100
         self.cooldown = cooldown
         self.confidence = confidence
-
-        self.region_cache = None
+        self.region = (0, 0, 1920, 1080)
 
     def search_once(self):
-        if self.region_cache is None:
-            try:
-                logging.debug("Image.search_once: Searching for %s", self.path)
-                x, y, size_x, size_y = pyautogui.locateOnScreen(
-                    self.path, confidence=self.confidence
-                )
-                self.x = x + int(size_x/2)
-                self.y = y + int(size_y/2)
-                self.region_cache = (
-                    x - self.padding,
-                    y - self.padding,
-                    x + size_x + self.padding,
-                    y + size_y + self.padding,
-                )
-            except TypeError:
-                logging.debug("Image.search_once: %s not found. Cooling down for %d", self.path, self.cooldown)
-                time.sleep(self.cooldown)
-                raise ImageException
-        else:
-            try:
-                _, _, _, _ = pyautogui.locateOnScreen(
-                    self.path, confidence=self.confidence, region=self.region_cache,
-                )
-            except TypeError:
-                logging.debug("Image.search_once: %s not found. Cooling down for %d", self.path, self.cooldown)
-                time.sleep(self.cooldown)
-                raise ImageException
+        try:
+            logging.debug("Image.search_once: Searching for %s", self.path)
+            x, y, size_x, size_y = pyautogui.locateOnScreen(
+                self.path, confidence=self.confidence, region=self.region
+            )
+            self.x = x + int(size_x/2)
+            self.y = y + int(size_y/2)
+        except TypeError:
+            logging.debug("Image.search_once: %s not found. Cooling down for %d", self.path, self.cooldown)
+            time.sleep(self.cooldown)
+            raise ImageException
 
     def search(self, attempts=1):
         for i in range(attempts):
@@ -128,9 +111,16 @@ class Images(object):
     def __init__(self, path_format: str):
         self.path_format = path_format
         self.image_dict = {}
+        self.region = (0, 0, 1920, 1080)
 
     def set(self, name: str, cooldown=1.0, confidence=0.9):
         self.image_dict[name] = Image(self.path_format % name, cooldown=cooldown, confidence=confidence)
+        self.image_dict[name].region = self.region
+
+    def set_region(self, region: tuple):
+        self.region = region
+        for img in self.image_dict:
+            img.region = self.region
 
     def get(self, name: str, cooldown=1.0, confidence=0.9) -> Image:
         try:

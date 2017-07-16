@@ -11,8 +11,6 @@ class Run(Main):
 
     def main(self):
         MemuIs.get("taskbar_pin").search_click()
-        # taskbar_pin_i = Image("png\\taskbar_nox.png")
-        # taskbar_pin_i.search_click()
         try:
             while True:
                 self.arena.begin()
@@ -20,28 +18,30 @@ class Run(Main):
 
                 # self.battle.ability(0, -400, "provoke")
                 try:
-                    self.battle.ability(0, -400, "armor_eraser")
+                    self.battle.ability(0, 0, "goddess_miracle", 0)
+                    self.battle.engage(0)
+                    self.battle.cooldown()
                 except ImageException:
                     pass
                 try:
-                    self.battle.ability(1, -370, "thunder_flask")
-                    # self.battle.ability(1, -300, "blizzard_flask")
+                    # self.battle.ability(1, -370, "thunder_flask")
+                    self.battle.ability(1, -300, "blizzard_flask")
                 except ImageException:
                     pass
                 try:
-                    # self.battle.ability(2, -300, "blizzard_flask")
-                    self.battle.ability(2, -320, "thunder_flask")
+                    self.battle.ability(2, -300, "blizzard_flask")
+                    # self.battle.ability(2, -320, "thunder_flask")
                 except ImageException:
                     pass
                 try:
-                    self.battle.dual_ability(3, -400, "dual_black_magic", 220, "meteor")
-                    # self.battle.ability(3, -200, "prism_heart")
+                    # self.battle.dual_ability(3, -400, "dual_black_magic", 220, "meteor")
+                    self.battle.ability(3, -400, "earth_shaker")
                     # self.battle.ability(3, -400, "ice_blitz")
                 except ImageException:
                     pass
                 try:
-                    # self.battle.ability(4, -200, "ice_age")
-                    self.battle.dual_ability(4, -400, "dual_black_magic", 220, "meteor")
+                    self.battle.ability(4, -400, "earth_shaker")
+                    # self.battle.dual_ability(4, -400, "dual_black_magic", 220, "meteor")
                     # self.battle.ability(4, -200, "meteor")
                 except ImageException:
                     pass

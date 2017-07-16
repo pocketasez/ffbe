@@ -4,7 +4,7 @@ from Main import *
 
 class Run(Main):
     def main(self):
-        summon_img = Image("png\\ffbe\\summon\\10000.png")
+        summon_img = Image("png\\ffbe\\summon\\10.png")
         summon_img.cache_enable = False
         next_img = Image("png\\ffbe\\summon\\next.png")
         next_img.cache_enable = False

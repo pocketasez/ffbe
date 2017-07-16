@@ -150,6 +150,7 @@ class Battle(FFBEBase):
     def ready_wait(self):
         self.cooldown()
         self.repeat_i.search(50)
+        self.cooldown()
 
     def setup(self):
         self.cooldown()
@@ -357,13 +358,18 @@ class Dungeon(FFBEBase):
 
         self.r_unit_exp_2 = ResultsIs.get("unit_exp_2")
         self.r_items_obtained = ResultsIs.get("items_obtained")
-        # self.r_items_obtained = ResultsIs.get("units_obtained")
+        self.r_units_obtained = ResultsIs.get("units_obtained")
         self.r_next_2 = ResultsIs.get("next_2")
         self.r_dont_request = ResultsIs.get("dont_request")
 
         self.r_error_ok = ResultsIs.get("error_ok")
 
         self.b_daily_quest_close_i = Is.get("daily_quest_close")
+
+        # Raid specific
+        self.r_damage_i = ResultsIs.get("damage")
+        self.r_event_pt_i = ResultsIs.get("event_pt")
+        self.r_total_i = ResultsIs.get("total")
 
     def _depart_rank(self):
         try:
@@ -374,7 +380,7 @@ class Dungeon(FFBEBase):
         self.manage_items_i.search(10)
         self.depart_i.search_click(5)
 
-    def depart(self):
+    def depart(self, use_lapis=True):
         try:
             self.adventure_i.search_click(5)
         except ImageException:
@@ -387,8 +393,11 @@ class Dungeon(FFBEBase):
         try:
             self.next_i.search_click(3)
         except ImageException:
-            self.use_lapis_i.search_click(3)
-            self.yes_i.search_click(3)
+            if use_lapis:
+                self.use_lapis_i.search_click(3)
+                self.yes_i.search_click(3)
+            else:
+                raise
         self._depart_rank()
         try:
             self.b_repeat_i.search(20)
@@ -418,16 +427,31 @@ class Dungeon(FFBEBase):
         self.manage_items_i.search(10)
         self.depart_i.search_click(5)
 
+    def depart_unit(self, unit: str):
+        self.adventure_i.search_click(3)
+        try:
+            self.next_i.search_click(3)
+        except ImageException:
+            self.use_lapis_i.search_click(3)
+            self.yes_i.search_click(3)
+        self.next_i.search_click(3)
+        unit_i = UnitIs.get(unit)
+        unit_i.cache_enable = False
+        for _ in range(6):
+            try:
+                unit_i.search(2)
+            except ImageException:
+                self.next_i.drag(y=-300)
+        unit_i.search_click(3)
+        self.manage_items_i.search(10)
+        self.depart_i.search_click(5)
+
     def results(self):
-        # try:
         try:
             self.r_gil_i.search_click(15)
         except ImageException:
             self.r_error_ok.search_click(3)
             self.r_gil_i.search_click(15)
-        # except ImageException:
-        #     self.r_error_ok.search_click(5)
-        #     self.r_gil_i.search_click(5)
         self.cooldown()
         try:
             self.r_unit_exp.search_click(2)
@@ -441,7 +465,53 @@ class Dungeon(FFBEBase):
         self.r_items_obtained.search_click(15)
         self.r_next_2.search_click(15)
         try:
+            self.r_dont_request.search_click(2)
+        except ImageException:
+            pass
+
+    def results_units(self):
+        try:
+            self.r_gil_i.search_click(15)
+        except ImageException:
+            self.r_error_ok.search_click(3)
+            self.r_gil_i.search_click(15)
+        self.cooldown()
+        try:
+            self.r_unit_exp.search_click(3)
+        except ImageException:
+            self.m_crash_ok_i.search_click(3)
+            self.cooldown()
+            self.r_unit_exp.search_click(3)
+        self.r_next.search_click(3)
+        self.r_unit_exp_2.search_click_clear(10)  # "Level up" would require 2 clicks
+        self.r_units_obtained.search_click(5)
+        self.r_next_2.search_click(15)
+        try:
             self.r_dont_request.search_click(3)
+        except ImageException:
+            pass
+
+    def results_raid(self):
+        try:
+            self.r_gil_i.search_click(15)
+        except ImageException:
+            self.r_error_ok.search_click(3)
+            self.r_gil_i.search_click(15)
+        self.cooldown()
+        self.r_unit_exp.search_click(2)
+        self.r_rank_exp.search_click_clear(2)
+
+        self.r_damage_i.search_click(3)
+        self.r_event_pt_i.search_click(3)
+        self.r_total_i.search_click(3)
+        self.r_total_i.search_click(3)
+        self.r_next.search_click(3)
+
+        self.r_unit_exp_2.search_click_clear(10)  # "Level up" would require 2 clicks
+        self.r_items_obtained.search_click(15)
+        self.r_next_2.search_click(15)
+        try:
+            self.r_dont_request.search_click(2)
         except ImageException:
             pass
 
@@ -456,4 +526,3 @@ class Dungeon(FFBEBase):
                 break
             except ImageException:
                 pass
-        self.results()
