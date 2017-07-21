@@ -4,15 +4,14 @@ from Main import *
 
 class Run(Main):
     def main(self):
-        taskbar_pin_i = Image("png\\memu\\taskbar_pin.png")
-        taskbar_pin_i.search_click(3)
+        super().main()
 
         menu = Menu()
         dungeon = Dungeon()
         battle = Battle()
 
         dungeon.adventure_i = DepartureIs.get("1_2")
-        # dungeon.adventure_i = DepartureIs.get("30_3")
+        # dungeon.adventure_i = DepartureIs.get("15_4")
         while True:
             try:
                 dungeon.depart()

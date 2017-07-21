@@ -18,9 +18,10 @@ class Run(Main):
 
                 # self.battle.ability(0, -400, "provoke")
                 try:
-                    self.battle.ability(0, 0, "goddess_miracle", 0)
-                    self.battle.engage(0)
-                    self.battle.cooldown()
+                    # self.battle.ability(0, 0, "goddess_miracle", 0)
+                    # self.battle.engage(0)
+                    # self.battle.cooldown()
+                    self.battle.guard(0)
                 except ImageException:
                     pass
                 try:
@@ -35,7 +36,8 @@ class Run(Main):
                     pass
                 try:
                     # self.battle.dual_ability(3, -400, "dual_black_magic", 220, "meteor")
-                    self.battle.ability(3, -400, "earth_shaker")
+                    # self.battle.ability(3, -400, "earth_shaker")
+                    self.battle.guard(3)
                     # self.battle.ability(3, -400, "ice_blitz")
                 except ImageException:
                     pass

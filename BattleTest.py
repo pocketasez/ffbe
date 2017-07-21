@@ -7,9 +7,11 @@ class Run(Main):
         taskbar_pin_i = Image("png\\memu\\taskbar_pin.png")
         taskbar_pin_i.search_click()
         battle = Battle()
-        lol = Image("png\\ffbe\\results\\gil.png")
-        lol.search()
-        logging.info("%i, %i", lol.x, lol.y)
+        wifi = Image("png\\ffbe\\connecting.png")
+        while True:
+            wifi.search()
+            time.sleep(0.5)
+        logging.info("%i, %i", wifi.x, wifi.y)
         #
         # W = 570
         # H = 1012

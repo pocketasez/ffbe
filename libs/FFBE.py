@@ -1,4 +1,5 @@
 from libs.Img import *
+
 pyautogui.FAILSAFE = False
 
 Is = Images("png\\ffbe\\%s.png")
@@ -20,14 +21,31 @@ BattleIs.set("repeat", confidence=0.99999)
 BattleIs.set("auto", confidence=0.99999)
 BattleIs.set("repeat", confidence=0.99999)
 BattleIs.set("repeat_disabled", confidence=0.99999)
-BattleIs.set("menu.png", confidence=0.99999)
+BattleIs.set("menu", confidence=0.99999)
 BattleIs.set("menu_disabled", confidence=0.99999)
+
+
+def set_region(nw_x=0, nw_y=0, se_x=1920, se_y=1080):
+    Is.set_region(nw_x, nw_y, se_x, se_y)
+    MenuIs.set_region(nw_x, nw_y, se_x, se_y)
+    MemuIs.set_region(nw_x, nw_y, se_x, se_y)
+
+    ArenaIs.set_region(nw_x, nw_y, se_x, se_y)
+    SummonIs.set_region(nw_x, nw_y, se_x, se_y)
+    UnitIs.set_region(nw_x, nw_y, se_x, se_y)
+
+    AbilityIs.set_region(nw_x, nw_y, se_x, se_y)
+
+    DepartureIs.set_region(nw_x, nw_y, se_x, se_y)
+    BattleIs.set_region(nw_x, nw_y, se_x, se_y)
+    ResultsIs.set_region(nw_x, nw_y, se_x, se_y)
+    WorldIs.set_region(nw_x, nw_y, se_x, se_y)
 
 
 class FFBEBase(object):
     def __init__(self):
         self.cooldown_sec = 1
-        
+
     def cooldown(self, factor=1.0):
         time.sleep(self.cooldown_sec * factor)
 
@@ -128,6 +146,7 @@ class Battle(FFBEBase):
         self.auto_i = BattleIs.get("auto")
         self.repeat_i = BattleIs.get("repeat")
         self.repeat_disabled_i = BattleIs.get("repeat_disabled")
+        self.menu_80_i = Image("png\\ffbe\\battle\\menu.png")
         self.menu_i = BattleIs.get("menu")
         self.menu_disabled_i = BattleIs.get("menu_disabled")
         self.back_i = BattleIs.get("back")
@@ -155,8 +174,8 @@ class Battle(FFBEBase):
     def setup(self):
         self.cooldown()
         self.repeat_i.search(40)
-        time.sleep(1)
-        try:
+        self.cooldown()
+        try:  # Sometimes repeat doesnt start disable on battle.
             self.repeat_i.search()
         except ImageException:
             self.repeat_i.search(40)
@@ -190,10 +209,13 @@ class Battle(FFBEBase):
         self.cooldown(3)
         self.wait_end()
 
+    def wait_turn_end(self, search=30):
+        self.menu_disabled_i.search(search)
+
     def wait_end(self):
         try:
             while True:
-                self.menu_i.search()
+                self.menu_80_i.search()
                 self.cooldown()
         except ImageException:
             pass
@@ -399,13 +421,14 @@ class Dungeon(FFBEBase):
             else:
                 raise
         self._depart_rank()
-        try:
-            self.b_repeat_i.search(20)
-        except ImageException:
-            self.unit_data_i.search_click(3)
-            self.unit_data_ok_i.search_click(3)
-            self._depart_rank()
-            self.b_repeat_i.search(20)
+        for _ in range(3):
+            try:
+                self.b_repeat_i.search(10)
+                return
+            except ImageException:
+                self.unit_data_i.search_click(3)
+                self.unit_data_ok_i.search_click(3)
+                self._depart_rank()
 
     def depart_bonus(self):
         self.adventure_i.search_click(3)
@@ -446,13 +469,12 @@ class Dungeon(FFBEBase):
         self.manage_items_i.search(10)
         self.depart_i.search_click(5)
 
-    def results(self):
+    def results(self, gil_search=10):
         try:
-            self.r_gil_i.search_click(15)
+            self.r_gil_i.search_click(gil_search)
         except ImageException:
             self.r_error_ok.search_click(3)
-            self.r_gil_i.search_click(15)
-        self.cooldown()
+            self.r_gil_i.search_click(10)
         try:
             self.r_unit_exp.search_click(2)
         except ImageException:
@@ -462,8 +484,8 @@ class Dungeon(FFBEBase):
         self.r_next.search_click(2)
         self.r_unit_exp_2.search_click_clear(10)  # "Level up" would require 2 clicks
         # self.r_items_obtained.search_click(5)
-        self.r_items_obtained.search_click(15)
-        self.r_next_2.search_click(15)
+        self.r_items_obtained.search_click(10)
+        self.r_next_2.search_click(10)
         try:
             self.r_dont_request.search_click(2)
         except ImageException:
@@ -471,10 +493,10 @@ class Dungeon(FFBEBase):
 
     def results_units(self):
         try:
-            self.r_gil_i.search_click(15)
+            self.r_gil_i.search_click(10)
         except ImageException:
             self.r_error_ok.search_click(3)
-            self.r_gil_i.search_click(15)
+            self.r_gil_i.search_click(10)
         self.cooldown()
         try:
             self.r_unit_exp.search_click(3)
@@ -485,7 +507,7 @@ class Dungeon(FFBEBase):
         self.r_next.search_click(3)
         self.r_unit_exp_2.search_click_clear(10)  # "Level up" would require 2 clicks
         self.r_units_obtained.search_click(5)
-        self.r_next_2.search_click(15)
+        self.r_next_2.search_click(10)
         try:
             self.r_dont_request.search_click(3)
         except ImageException:
@@ -493,10 +515,10 @@ class Dungeon(FFBEBase):
 
     def results_raid(self):
         try:
-            self.r_gil_i.search_click(15)
+            self.r_gil_i.search_click(10)
         except ImageException:
             self.r_error_ok.search_click(3)
-            self.r_gil_i.search_click(15)
+            self.r_gil_i.search_click(10)
         self.cooldown()
         self.r_unit_exp.search_click(2)
         self.r_rank_exp.search_click_clear(2)
@@ -508,8 +530,8 @@ class Dungeon(FFBEBase):
         self.r_next.search_click(3)
 
         self.r_unit_exp_2.search_click_clear(10)  # "Level up" would require 2 clicks
-        self.r_items_obtained.search_click(15)
-        self.r_next_2.search_click(15)
+        self.r_items_obtained.search_click(10)
+        self.r_next_2.search_click(10)
         try:
             self.r_dont_request.search_click(2)
         except ImageException:

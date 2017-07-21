@@ -18,7 +18,7 @@ class Pixel(object):
 
     def click(self):
         logging.info("Pixel.click: Clicking on (%i,%i)", self.x, self.y)
-        pyautogui.click(self.x, self.y)
+        pyautogui.click(self.x, self.y, duration=0.1)
 
     def drag(self, x=0, y=0):
         self.move()
@@ -117,10 +117,10 @@ class Images(object):
         self.image_dict[name] = Image(self.path_format % name, cooldown=cooldown, confidence=confidence)
         self.image_dict[name].region = self.region
 
-    def set_region(self, region: tuple):
-        self.region = region
-        for img in self.image_dict:
-            img.region = self.region
+    def set_region(self, nw_x=0, nw_y=0, se_x=1920, se_y=1080):
+        self.region = (nw_x, nw_y, se_x, se_y)
+        for name in self.image_dict:
+            self.image_dict[name].region = self.region
 
     def get(self, name: str, cooldown=1.0, confidence=0.9) -> Image:
         try:
