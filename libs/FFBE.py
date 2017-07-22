@@ -78,7 +78,7 @@ class Menu(FFBEBase):
                 self.app_i.click()
         self.main_i.search_click_clear(3)
         try:
-            self.play_ok_i.search_click_clear(30)
+            self.play_ok_i.search_click_clear(50)
         except ImageException:
             pass
 
@@ -368,6 +368,7 @@ class Dungeon(FFBEBase):
         self.bonus_i = DepartureIs.get("bonus")
         self.unit_data_i = DepartureIs.get("unit_data")
         self.unit_data_ok_i = DepartureIs.get("unit_data_ok")
+        self.connection_error_i = DepartureIs.get("connection_error")
 
         self.m_crash_ok_i = MemuIs.get("crash_ok")
 
@@ -423,12 +424,16 @@ class Dungeon(FFBEBase):
         self._depart_rank()
         for _ in range(3):
             try:
-                self.b_repeat_i.search(10)
+                self.b_repeat_i.search(20)
                 return
             except ImageException:
-                self.unit_data_i.search_click(3)
-                self.unit_data_ok_i.search_click(3)
-                self._depart_rank()
+                try:
+                    self.unit_data_i.search_click(3)
+                    self.unit_data_ok_i.search_click(3)
+                    self._depart_rank()
+                except ImageException:
+                    self.connection_error_i.search_click(3)
+                    self.unit_data_ok_i.search_click(3)
 
     def depart_bonus(self):
         self.adventure_i.search_click(3)
@@ -469,12 +474,12 @@ class Dungeon(FFBEBase):
         self.manage_items_i.search(10)
         self.depart_i.search_click(5)
 
-    def results(self, gil_search=10):
+    def results(self, gil_search=15):
         try:
             self.r_gil_i.search_click(gil_search)
         except ImageException:
             self.r_error_ok.search_click(3)
-            self.r_gil_i.search_click(10)
+            self.r_gil_i.search_click(15)
         try:
             self.r_unit_exp.search_click(2)
         except ImageException:
