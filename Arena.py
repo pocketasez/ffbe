@@ -16,35 +16,28 @@ class Run(Main):
                 self.arena.begin()
                 self.battle.setup()
 
-                # self.battle.ability(0, -400, "provoke")
                 try:
-                    # self.battle.ability(0, 0, "goddess_miracle", 0)
-                    # self.battle.engage(0)
-                    # self.battle.cooldown()
-                    self.battle.guard(0)
+                    # self.battle.guard(0)
+                    self.battle.ability(0, -400, "provoke")
+                    # self.battle.dual_ability(0, -400, "dualcast", 200, "curaja", 0)
                 except ImageException:
                     pass
                 try:
-                    # self.battle.ability(1, -370, "thunder_flask")
-                    self.battle.ability(1, -300, "blizzard_flask")
+                    self.battle.ability(1, -230, "fire_flask")
                 except ImageException:
                     pass
                 try:
-                    self.battle.ability(2, -300, "blizzard_flask")
-                    # self.battle.ability(2, -320, "thunder_flask")
+                    self.battle.ability(2, -300, "fire_flask")
                 except ImageException:
                     pass
                 try:
-                    # self.battle.dual_ability(3, -400, "dual_black_magic", 220, "meteor")
-                    # self.battle.ability(3, -400, "earth_shaker")
-                    self.battle.guard(3)
-                    # self.battle.ability(3, -400, "ice_blitz")
+                    self.battle.dual_ability(3, -400, "dual_black_magic", 210, "meteor")
+                    # self.battle.ability(3, -400, "aero_blitz")
                 except ImageException:
                     pass
                 try:
-                    self.battle.ability(4, -400, "earth_shaker")
-                    # self.battle.dual_ability(4, -400, "dual_black_magic", 220, "meteor")
-                    # self.battle.ability(4, -200, "meteor")
+                    self.battle.dual_ability(4, -400, "dual_black_magic", 210, "meteor")
+                    # self.battle.ability(4, -400, "aero_blitz")
                 except ImageException:
                     pass
                 # exit()

@@ -59,6 +59,19 @@ class Image(Pixel):
             time.sleep(self.cooldown)
             raise ImageException
 
+    def wait_cleared(self):
+        time.sleep(self.cooldown)
+        count = 0
+        try:
+            while True:
+                count = count + 1
+                self.search_once()
+        except ImageException:
+            logging.info(
+                'Image.wait_cleared: %s disappeared on attempt %i. Cooldown %d',
+                self.path, count, self.cooldown
+            )
+
     def search(self, attempts=1):
         for i in range(attempts):
             try:
@@ -70,7 +83,7 @@ class Image(Pixel):
         logging.info('Image.search: %s not found after %i attempts', self.path, attempts)
         raise ImageException
 
-    def search_all(self, max:int):
+    def search_all(self, max: int):
         pass
 
     def clear(self):
