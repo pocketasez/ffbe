@@ -42,15 +42,16 @@ def set_region(nw_x=0, nw_y=0, se_x=1920, se_y=1080):
     WorldIs.set_region(nw_x, nw_y, se_x, se_y)
 
 
-class FFBEBase(object):
+class Base(object):
     def __init__(self):
+        self.img_set = None
         self.cooldown_sec = 1
 
     def cooldown(self, factor=1.0):
         time.sleep(self.cooldown_sec * factor)
 
 
-class Menu(FFBEBase):
+class Menu(Base):
     def __init__(self):
         super().__init__()
         self.app_i = MenuIs.get("app")
@@ -83,7 +84,7 @@ class Menu(FFBEBase):
             pass
 
 
-class Exploration(FFBEBase):
+class Exploration(Base):
     def __init__(self):
         super().__init__()
         self.menu_img = Image("png\\ffbe\\exploration\\menu.png")
@@ -139,7 +140,7 @@ class Exploration(FFBEBase):
         self.menu_img.search()
 
 
-class Battle(FFBEBase):
+class Battle(Base):
     def __init__(self):
         super().__init__()
 
@@ -213,12 +214,7 @@ class Battle(FFBEBase):
         self.menu_disabled_i.search(search)
 
     def wait_end(self):
-        try:
-            while True:
-                self.menu_80_i.search()
-                self.cooldown()
-        except ImageException:
-            pass
+        self.menu_80_i.wait_cleared()
 
     def repeat(self):
         self.repeat_i.search_click(40)
@@ -301,7 +297,7 @@ class Battle(FFBEBase):
             self.cooldown()
 
 
-class Arena(FFBEBase):
+class Arena(Base):
     def __init__(self):
         super(Arena, self).__init__()
 
@@ -351,7 +347,7 @@ class Arena(FFBEBase):
             pass
 
 
-class Dungeon(FFBEBase):
+class Dungeon(Base):
     def __init__(self):
         super().__init__()
 
@@ -369,6 +365,9 @@ class Dungeon(FFBEBase):
         self.unit_data_i = DepartureIs.get("unit_data")
         self.unit_data_ok_i = DepartureIs.get("unit_data_ok")
         self.connection_error_i = DepartureIs.get("connection_error")
+
+        self.connecting_i = DepartureIs.get("connecting")
+        self.nrg_i = DepartureIs.get("nrg")
 
         self.m_crash_ok_i = MemuIs.get("crash_ok")
 
@@ -397,11 +396,30 @@ class Dungeon(FFBEBase):
     def _depart_rank(self):
         try:
             self.rank_i.search_click(10)
-        except ImageException:
-            self.next_i.search_click(10)
-            self.rank_i.search_click(5)
+        except ImageException:  # Sometimes the click doesnt go to the next page
+            self.next_i.search_click(5)
+            self.rank_i.search_click(10)
         self.manage_items_i.search(10)
         self.depart_i.search_click(5)
+
+    def _depart_end(self):
+        self._depart_rank()
+        self.connecting_i.wait_cleared()
+        for _ in range(5):
+            try:
+                # time.sleep(0.5)  # Sometimes it doesn't find it and fails
+                self.b_repeat_i.search(5)
+                break
+            except ImageException:
+                try:
+                    self.unit_data_i.search_click()
+                    self.unit_data_ok_i.search_click()
+                    self._depart_rank()
+                    self.connecting_i.wait_cleared()
+                except ImageException:
+                    self.connection_error_i.search_click()
+                    self.unit_data_ok_i.search_click()
+                    self.connecting_i.wait_cleared()
 
     def depart(self, use_lapis=True):
         try:
@@ -419,21 +437,10 @@ class Dungeon(FFBEBase):
             if use_lapis:
                 self.use_lapis_i.search_click(3)
                 self.yes_i.search_click(3)
+                self.next_i.search_click(10)
             else:
                 raise
-        self._depart_rank()
-        for _ in range(3):
-            try:
-                self.b_repeat_i.search(20)
-                return
-            except ImageException:
-                try:
-                    self.unit_data_i.search_click(3)
-                    self.unit_data_ok_i.search_click(3)
-                    self._depart_rank()
-                except ImageException:
-                    self.connection_error_i.search_click(3)
-                    self.unit_data_ok_i.search_click(3)
+        self._depart_end()
 
     def depart_bonus(self):
         self.adventure_i.search_click(3)
@@ -474,7 +481,8 @@ class Dungeon(FFBEBase):
         self.manage_items_i.search(10)
         self.depart_i.search_click(5)
 
-    def results(self, gil_search=15):
+    def results(self, gil_search=20):
+        self.connecting_i.wait_cleared()
         try:
             self.r_gil_i.search_click(gil_search)
         except ImageException:
