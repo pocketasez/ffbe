@@ -408,7 +408,7 @@ class Dungeon(Base):
         for _ in range(5):
             try:
                 # time.sleep(0.5)  # Sometimes it doesn't find it and fails
-                self.b_repeat_i.search(5)
+                self.b_repeat_i.search(15)
                 break
             except ImageException:
                 try:
