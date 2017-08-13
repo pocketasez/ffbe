@@ -5,22 +5,10 @@ from Main import *
 class Run(Main):
     def main(self):
         taskbar_pin_i = Image("png\\memu\\taskbar_pin.png")
-        taskbar_pin_i.search_click()
-        battle = Battle()
-        wifi = Image("png\\ffbe\\results\\gil.png")
-        # while True:
-        #     wifi.search()
-        #     time.sleep(0.5)
-        wifi.search()
-        logging.info("%i, %i", wifi.x, wifi.y)
-        #
-        # W = 570
-        # H = 1012
-        # battle.setup()
-        # battle.ability(3, -400, "frost_flower_blitz")
-        # battle.ability(4, -400, "frost_flower_blitz")
-        # battle.ability(5, -400, "frost_flower_blitz")
-
+        # taskbar_pin_i.search_click()
+        dungeon = Dungeon()
+        dungeon.r_gil_i.search()
+        # test.search_click(3)
 
 if __name__ == '__main__':
     m = Run()

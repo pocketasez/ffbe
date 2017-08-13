@@ -21,7 +21,7 @@ BattleIs.set("repeat", confidence=0.99999)
 BattleIs.set("auto", confidence=0.99999)
 BattleIs.set("repeat", confidence=0.99999)
 BattleIs.set("repeat_disabled", confidence=0.99999)
-BattleIs.set("menu", confidence=0.99999)
+BattleIs.set("menu", confidence=0.99)  # Try finding this first
 BattleIs.set("menu_disabled", confidence=0.99999)
 
 
@@ -78,10 +78,6 @@ class Menu(Base):
             except ImageException:
                 self.app_i.click()
         self.main_i.search_click_clear(3)
-        try:
-            self.play_ok_i.search_click_clear(50)
-        except ImageException:
-            pass
 
 
 class Exploration(Base):
@@ -247,12 +243,7 @@ class Battle(Base):
     def _ability(self, pos_int, scroll_y_int=0, ability_str=None, cast_to_int=None):
         ability_i = self.is_arr[pos_int].get(ability_str)
         self.scroll_y(scroll_y_int)
-        try:
-            ability_i.search_click(3)
-        except ImageException:
-            self.back_i.search_click(3)
-            self.cooldown()
-            raise
+        ability_i.search_click(3)
         self.cooldown()
         if cast_to_int is not None:
             assert isinstance(cast_to_int, int)
@@ -385,6 +376,7 @@ class Dungeon(Base):
         self.r_dont_request = ResultsIs.get("dont_request")
 
         self.r_error_ok = ResultsIs.get("error_ok")
+        self.r_friends_ok = ResultsIs.get("friends_ok")
 
         self.b_daily_quest_close_i = Is.get("daily_quest_close")
 
@@ -429,8 +421,13 @@ class Dungeon(Base):
                 self.b_daily_quest_close_i.search_click()
                 self.adventure_i.search_click(5)
             except ImageException:
-                self.r_dont_request.search_click_clear(1)
-                self.adventure_i.search_click(5)
+                try:
+                    self.r_dont_request.search_click_clear(1)
+                    self.adventure_i.search_click(5)
+                except ImageException:
+                    self.r_friends_ok.search_click(2)
+                    self.adventure_i.search_click(5)
+
         try:
             self.next_i.search_click(3)
         except ImageException:
