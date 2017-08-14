@@ -19,6 +19,18 @@ class Run(Main):
 
         dungeon.adventure_i = DepartureIs.get("1_2")
         # dungeon.adventure_i = DepartureIs.get("15_4")
+        try:
+            # menu.main_i.search_click_clear(1)
+            world_i.search_click(3)
+            olderion_i.search(10)
+            olderion_i.drag(-200)
+            grandshelt_i.search_click(10)
+            grandshelt_isles_i.search_click(10)
+            ordol_port_i.search(10)
+            ordol_port_i.drag(200)
+            earth_shrine_i.search_click_clear(10)
+        except ImageException:
+            pass
         while True:
             try:
                 dungeon.depart()
