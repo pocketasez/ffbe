@@ -18,7 +18,7 @@ class Pixel(object):
 
     def click(self):
         logging.info("Pixel.click: Clicking on (%i,%i)", self.x, self.y)
-        pyautogui.click(self.x, self.y) # , duration=0.1
+        pyautogui.click(self.x, self.y)  # , duration=0.1
 
     def drag(self, x=0, y=0):
         self.move()

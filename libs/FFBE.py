@@ -2,24 +2,23 @@ from libs.Img import *
 
 pyautogui.FAILSAFE = False
 
-Is = Images("png\\ffbe\\%s.png")
-MenuIs = Images("png\\ffbe\\menu\\%s.png")
-MemuIs = Images("png\\memu\\%s.png")
+Is = Images("libs\\ffbe\\%s.png")
+MenuIs = Images("libs\\ffbe\\menu\\%s.png")
+MemuIs = Images("libs\\memu\\%s.png")
 
-ArenaIs = Images("png\\ffbe\\arena\\%s.png")
-SummonIs = Images("png\\ffbe\\summon\\%s.png")
-UnitIs = Images("png\\ffbe\\unit\\%s.png")
+ArenaIs = Images("libs\\ffbe\\arena\\%s.png")
+SummonIs = Images("libs\\ffbe\\summon\\%s.png")
+UnitIs = Images("libs\\ffbe\\unit\\%s.png")
 
-AbilityIs = Images("png\\ffbe\\ability\\%s.png")
+AbilityIs = Images("libs\\ffbe\\ability\\%s.png")
 
-DepartureIs = Images("png\\ffbe\\departure\\%s.png")
-BattleIs = Images("png\\ffbe\\battle\\%s.png")
-ResultsIs = Images("png\\ffbe\\results\\%s.png")
-WorldIs = Images("png\\ffbe\\world\\%s.png")
+DepartureIs = Images("libs\\ffbe\\departure\\%s.png")
+BattleIs = Images("libs\\ffbe\\battle\\%s.png")
+ResultsIs = Images("libs\\ffbe\\results\\%s.png")
+WorldIs = Images("libs\\ffbe\\world\\%s.png")
 
 BattleIs.set("repeat", confidence=0.99999)
 BattleIs.set("auto", confidence=0.99999)
-BattleIs.set("repeat", confidence=0.99999)
 BattleIs.set("repeat_disabled", confidence=0.99999)
 BattleIs.set("menu", confidence=0.99)  # Try finding this first
 BattleIs.set("menu_disabled", confidence=0.99999)
@@ -83,7 +82,7 @@ class Menu(Base):
 class Exploration(Base):
     def __init__(self):
         super().__init__()
-        self.menu_img = Image("png\\ffbe\\exploration\\menu.png")
+        self.menu_img = Image("libs\\ffbe\\exploration\\menu.png")
         self.north_pix = Pixel()
         self.south_pix = Pixel()
         self.east_pix = Pixel()
@@ -143,7 +142,7 @@ class Battle(Base):
         self.auto_i = BattleIs.get("auto")
         self.repeat_i = BattleIs.get("repeat")
         self.repeat_disabled_i = BattleIs.get("repeat_disabled")
-        self.menu_80_i = Image("png\\ffbe\\battle\\menu.png")
+        self.menu_80_i = Image("libs\\ffbe\\battle\\menu.png")
         self.menu_i = BattleIs.get("menu")
         self.menu_disabled_i = BattleIs.get("menu_disabled")
         self.back_i = BattleIs.get("back")
@@ -158,7 +157,7 @@ class Battle(Base):
         self.is_arr = []
 
         for i in range(6):
-            self.is_arr.append(Images("png\\ffbe\\ability\\%s.png"))
+            self.is_arr.append(Images("libs\\ffbe\\ability\\%s.png"))
             self.pos_arr.append(Pixel())
         self.lower_drag_pix = Pixel()
         self.upper_drag_pix = Pixel()
@@ -439,13 +438,16 @@ class Dungeon(Base):
                 raise
         self._depart_end()
 
-    def depart_bonus(self):
+    def depart_bonus(self, use_lapis=True):
         self.adventure_i.search_click(3)
         try:
             self.next_i.search_click(3)
         except ImageException:
-            self.use_lapis_i.search_click(3)
-            self.yes_i.search_click(3)
+            if use_lapis:
+                self.use_lapis_i.search_click(3)
+                self.yes_i.search_click(3)
+            else:
+                raise
         self.next_i.search_click(3)
         for _ in range(4):
             try:

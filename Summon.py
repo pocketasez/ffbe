@@ -4,7 +4,7 @@ from Main import *
 
 class Run(Main):
     def main(self):
-        summon_img = Image("png\\ffbe\\summon\\10.png")
+        summon_img = Image("png\\ffbe\\summon\\1000.png")
         next_img = Image("png\\ffbe\\summon\\next.png")
         while True:
             summon_img.search_click(10)
