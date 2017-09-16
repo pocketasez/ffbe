@@ -55,18 +55,16 @@ class Menu(Base):
         super().__init__()
         self.app_i = MenuIs.get("app")
         self.main_i = MenuIs.get("main")
-        self.play_ok_i = MenuIs.get("play_ok")
-
-        self.isnt_responding_i = MemuIs.get("isnt_responding")
-        self.launcher_stop_i = MemuIs.get("launcher_stop")
-        self.ok_i = MemuIs.get("ok")
+        self.crash_ok_i = MenuIs.get("crash_ok")
 
     def start(self):
+        try:
+            self.crash_ok_i.search_click_clear(3)
+        except ImageException:
+            pass
         self.app_i.search_click(3)
         for _ in range(30):
             try:
-                self.isnt_responding_i.search()
-                self.ok_i.search_click(3)
                 self.app_i.search_click(3)
                 self.main_i.search(30)  #
             except ImageException:
@@ -150,8 +148,8 @@ class Battle(Base):
 
         self.r_gil_i = ResultsIs.get("gil")
 
-        self.tm_ok_i = Is.get("tm_ok")
-        self.ffbe_app_i = Is.get("ffbe_app")
+        self.repeat_disabled_i = BattleIs.get("repeat_disabled")
+        self.play_yes_i = BattleIs.get("play_yes")
 
         self.pos_arr = []
         self.is_arr = []
@@ -198,10 +196,10 @@ class Battle(Base):
 
     def auto(self):
         self.auto_i.search_click(20)
-        try:
-            self.tm_ok_i.search_click(3)
-        except ImageException:
-            pass
+        # try:
+        #     self.tm_ok_i.search_click(3)
+        # except ImageException:
+        #     pass
         self.cooldown(3)
         self.wait_end()
 
@@ -300,7 +298,7 @@ class Arena(Base):
 
         self.results_i = ArenaIs.get("results")
         self.won_i = ArenaIs.get("won")
-        self.result_ok_i = ArenaIs.get("result_ok", confidence=0.99999)
+        self.results_ok_i = ArenaIs.get("results_ok", confidence=0.99999)
         self.rank_ok_i = ArenaIs.get("rank_ok", confidence=0.99999)
         self.rewards_ok_i = ArenaIs.get("rewards_ok", confidence=0.99999)
 
@@ -319,7 +317,7 @@ class Arena(Base):
         for _ in range(3):
             self.won_i.click()
             self.cooldown()
-        self.result_ok_i.search_click(20)
+        self.results_ok_i.search_click(20)
         for _ in range(3):
             self.won_i.click()
             self.cooldown()
@@ -332,7 +330,7 @@ class Arena(Base):
             self.rewards_ok_i.search_click_clear(3)
             self.cooldown()
             self.cooldown()
-            self.result_ok_i.click()
+            self.results_ok_i.click()
         except ImageException:
             pass
 
@@ -421,7 +419,6 @@ class Dungeon(Base):
                 self.adventure_i.search_click(5)
             except ImageException:
                 try:
-                    self.r_dont_request.search_click_clear(1)
                     self.adventure_i.search_click(5)
                 except ImageException:
                     self.r_friends_ok.search_click(2)
@@ -446,12 +443,13 @@ class Dungeon(Base):
             if use_lapis:
                 self.use_lapis_i.search_click(3)
                 self.yes_i.search_click(3)
+                self.next_i.search_click(3)
             else:
                 raise
-        self.next_i.search_click(3)
         for _ in range(4):
             try:
                 self.bonus_i.search(2)
+                break
             except ImageException:
                 self.next_i.drag(y=-400)
         try:
@@ -498,10 +496,10 @@ class Dungeon(Base):
         # self.r_items_obtained.search_click(5)
         self.r_items_obtained.search_click(10)
         self.r_next_2.search_click(10)
-        try:
-            self.r_dont_request.search_click(2)
-        except ImageException:
-            pass
+        # try:
+        #     self.r_dont_request.search_click(2)
+        # except ImageException:
+        #     pass
 
     def results_units(self):
         try:

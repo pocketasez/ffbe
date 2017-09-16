@@ -4,8 +4,6 @@ from Main import *
 
 class Run(Main):
     def main(self):
-        taskbar_pin_i = Image("png\\memu\\taskbar_pin.png")
-        taskbar_pin_i.search_click()
         battle = Battle()
         dungeon = Dungeon()
         dungeon.adventure_i = DepartureIs.get("25_5")
