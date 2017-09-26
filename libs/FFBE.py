@@ -162,17 +162,17 @@ class Battle(Base):
 
     def ready_wait(self):
         self.cooldown()
-        self.repeat_i.search(50)
+        self.repeat_i.search(30)
         self.cooldown()
 
     def setup(self):
         self.cooldown()
-        self.repeat_i.search(40)
+        self.repeat_i.search(30)
         self.cooldown()
         try:  # Sometimes repeat doesnt start disable on battle.
             self.repeat_i.search()
         except ImageException:
-            self.repeat_i.search(40)
+            self.repeat_i.search(30)
         self.auto_i.search(5)
         y = 300
         for i in range(3):
@@ -401,8 +401,7 @@ class Dungeon(Base):
                 break
             except ImageException:
                 try:
-                    self.unit_data_i.search_click()
-                    self.unit_data_ok_i.search_click()
+                    self.r_error_ok.search_click()
                     self._depart_rank()
                     self.connecting_i.wait_cleared()
                 except ImageException:
@@ -466,7 +465,7 @@ class Dungeon(Base):
         except ImageException:
             self.use_lapis_i.search_click(3)
             self.yes_i.search_click(3)
-        self.next_i.search_click(3)
+            self.next_i.search_click(3)
         unit_i = UnitIs.get(unit)
         unit_i.cache_enable = False
         for _ in range(6):
@@ -530,9 +529,11 @@ class Dungeon(Base):
             self.r_error_ok.search_click(3)
             self.r_gil_i.search_click(10)
         self.cooldown()
-        self.r_unit_exp.search_click(2)
-        self.r_rank_exp.search_click_clear(2)
-
+        try:
+            self.r_unit_exp.search_click(2)
+            self.r_rank_exp.search_click_clear(2)
+        except ImageException:
+            pass
         self.r_damage_i.search_click(3)
         self.r_event_pt_i.search_click(3)
         self.r_total_i.search_click(3)
@@ -544,7 +545,8 @@ class Dungeon(Base):
         self.r_next_2.search_click(10)
         try:
             self.r_dont_request.search_click(2)
-        except ImageException:
+        # except ImageException:
+        except Exception:
             pass
 
     def repeat_results(self):
