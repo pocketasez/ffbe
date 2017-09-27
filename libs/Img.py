@@ -49,6 +49,7 @@ class Image(Pixel):
     def search_once(self):
         try:
             logging.debug("Image.search_once: Searching for %s", self.path)
+            # locateOnScreen options: grayscale=None, limit=10000, region=None, step=1, confidence=0.999
             x, y, size_x, size_y = pyautogui.locateOnScreen(
                 self.path, confidence=self.confidence, region=self.region
             )
