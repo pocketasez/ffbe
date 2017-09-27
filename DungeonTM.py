@@ -41,7 +41,7 @@ class Run(Main):
                 i = 0
                 for i in range(15):
                     try:
-                        menu.play_ok_i.search_click(1)
+                        battle.play_yes_i.search_click(1)
                     except ImageException:
                         pass
                     try:

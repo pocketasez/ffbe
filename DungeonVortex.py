@@ -11,16 +11,18 @@ class Run(Main):
         battle = Battle()
 
         #
-        dungeon.adventure_i = DepartureIs.get("5_4")
+        dungeon.adventure_i = DepartureIs.get("10_4")
 
         # dungeon.adventure_i = DepartureIs.get("faeries")  # Black, Green, White
         # dungeon.adventure_i = DepartureIs.get("masters")  # Guard, Power, Tech
-        dungeon.adventure_i = DepartureIs.get("wise")  # Healing, Support
+        # dungeon.adventure_i = DepartureIs.get("wise")  # Healing, Support
 
-        for _ in range(3):
-            dungeon.depart()
+        # for _ in range(3):
+        while True:
+            dungeon.depart(False)
             battle.auto()
             dungeon.results()
+
 
 if __name__ == '__main__':
     m = Run()

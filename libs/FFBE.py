@@ -2,24 +2,23 @@ from libs.Img import *
 
 pyautogui.FAILSAFE = False
 
-Is = Images("png\\ffbe\\%s.png")
-MenuIs = Images("png\\ffbe\\menu\\%s.png")
-MemuIs = Images("png\\memu\\%s.png")
+Is = Images("libs\\ffbe\\%s.png")
+MenuIs = Images("libs\\ffbe\\menu\\%s.png")
+MemuIs = Images("libs\\memu\\%s.png")
 
-ArenaIs = Images("png\\ffbe\\arena\\%s.png")
-SummonIs = Images("png\\ffbe\\summon\\%s.png")
-UnitIs = Images("png\\ffbe\\unit\\%s.png")
+ArenaIs = Images("libs\\ffbe\\arena\\%s.png")
+SummonIs = Images("libs\\ffbe\\summon\\%s.png")
+UnitIs = Images("libs\\ffbe\\unit\\%s.png")
 
-AbilityIs = Images("png\\ffbe\\ability\\%s.png")
+AbilityIs = Images("libs\\ffbe\\ability\\%s.png")
 
-DepartureIs = Images("png\\ffbe\\departure\\%s.png")
-BattleIs = Images("png\\ffbe\\battle\\%s.png")
-ResultsIs = Images("png\\ffbe\\results\\%s.png")
-WorldIs = Images("png\\ffbe\\world\\%s.png")
+DepartureIs = Images("libs\\ffbe\\departure\\%s.png")
+BattleIs = Images("libs\\ffbe\\battle\\%s.png")
+ResultsIs = Images("libs\\ffbe\\results\\%s.png")
+WorldIs = Images("libs\\ffbe\\world\\%s.png")
 
 BattleIs.set("repeat", confidence=0.99999)
 BattleIs.set("auto", confidence=0.99999)
-BattleIs.set("repeat", confidence=0.99999)
 BattleIs.set("repeat_disabled", confidence=0.99999)
 BattleIs.set("menu", confidence=0.99)  # Try finding this first
 BattleIs.set("menu_disabled", confidence=0.99999)
@@ -56,18 +55,16 @@ class Menu(Base):
         super().__init__()
         self.app_i = MenuIs.get("app")
         self.main_i = MenuIs.get("main")
-        self.play_ok_i = MenuIs.get("play_ok")
-
-        self.isnt_responding_i = MemuIs.get("isnt_responding")
-        self.launcher_stop_i = MemuIs.get("launcher_stop")
-        self.ok_i = MemuIs.get("ok")
+        self.crash_ok_i = MenuIs.get("crash_ok")
 
     def start(self):
+        try:
+            self.crash_ok_i.search_click_clear(3)
+        except ImageException:
+            pass
         self.app_i.search_click(3)
         for _ in range(30):
             try:
-                self.isnt_responding_i.search()
-                self.ok_i.search_click(3)
                 self.app_i.search_click(3)
                 self.main_i.search(30)  #
             except ImageException:
@@ -83,7 +80,7 @@ class Menu(Base):
 class Exploration(Base):
     def __init__(self):
         super().__init__()
-        self.menu_img = Image("png\\ffbe\\exploration\\menu.png")
+        self.menu_img = Image("libs\\ffbe\\exploration\\menu.png")
         self.north_pix = Pixel()
         self.south_pix = Pixel()
         self.east_pix = Pixel()
@@ -143,7 +140,7 @@ class Battle(Base):
         self.auto_i = BattleIs.get("auto")
         self.repeat_i = BattleIs.get("repeat")
         self.repeat_disabled_i = BattleIs.get("repeat_disabled")
-        self.menu_80_i = Image("png\\ffbe\\battle\\menu.png")
+        self.menu_80_i = Image("libs\\ffbe\\battle\\menu.png")
         self.menu_i = BattleIs.get("menu")
         self.menu_disabled_i = BattleIs.get("menu_disabled")
         self.back_i = BattleIs.get("back")
@@ -151,31 +148,31 @@ class Battle(Base):
 
         self.r_gil_i = ResultsIs.get("gil")
 
-        self.tm_ok_i = Is.get("tm_ok")
-        self.ffbe_app_i = Is.get("ffbe_app")
+        self.repeat_disabled_i = BattleIs.get("repeat_disabled")
+        self.play_yes_i = BattleIs.get("play_yes")
 
         self.pos_arr = []
         self.is_arr = []
 
         for i in range(6):
-            self.is_arr.append(Images("png\\ffbe\\ability\\%s.png"))
+            self.is_arr.append(Images("libs\\ffbe\\ability\\%s.png"))
             self.pos_arr.append(Pixel())
         self.lower_drag_pix = Pixel()
         self.upper_drag_pix = Pixel()
 
     def ready_wait(self):
         self.cooldown()
-        self.repeat_i.search(50)
+        self.repeat_i.search(30)
         self.cooldown()
 
     def setup(self):
         self.cooldown()
-        self.repeat_i.search(40)
+        self.repeat_i.search(30)
         self.cooldown()
         try:  # Sometimes repeat doesnt start disable on battle.
             self.repeat_i.search()
         except ImageException:
-            self.repeat_i.search(40)
+            self.repeat_i.search(30)
         self.auto_i.search(5)
         y = 300
         for i in range(3):
@@ -199,10 +196,10 @@ class Battle(Base):
 
     def auto(self):
         self.auto_i.search_click(20)
-        try:
-            self.tm_ok_i.search_click(3)
-        except ImageException:
-            pass
+        # try:
+        #     self.tm_ok_i.search_click(3)
+        # except ImageException:
+        #     pass
         self.cooldown(3)
         self.wait_end()
 
@@ -301,7 +298,7 @@ class Arena(Base):
 
         self.results_i = ArenaIs.get("results")
         self.won_i = ArenaIs.get("won")
-        self.result_ok_i = ArenaIs.get("result_ok", confidence=0.99999)
+        self.results_ok_i = ArenaIs.get("results_ok", confidence=0.99999)
         self.rank_ok_i = ArenaIs.get("rank_ok", confidence=0.99999)
         self.rewards_ok_i = ArenaIs.get("rewards_ok", confidence=0.99999)
 
@@ -320,7 +317,7 @@ class Arena(Base):
         for _ in range(3):
             self.won_i.click()
             self.cooldown()
-        self.result_ok_i.search_click(20)
+        self.results_ok_i.search_click(20)
         for _ in range(3):
             self.won_i.click()
             self.cooldown()
@@ -333,7 +330,7 @@ class Arena(Base):
             self.rewards_ok_i.search_click_clear(3)
             self.cooldown()
             self.cooldown()
-            self.result_ok_i.click()
+            self.results_ok_i.click()
         except ImageException:
             pass
 
@@ -404,8 +401,7 @@ class Dungeon(Base):
                 break
             except ImageException:
                 try:
-                    self.unit_data_i.search_click()
-                    self.unit_data_ok_i.search_click()
+                    self.r_error_ok.search_click()
                     self._depart_rank()
                     self.connecting_i.wait_cleared()
                 except ImageException:
@@ -422,7 +418,6 @@ class Dungeon(Base):
                 self.adventure_i.search_click(5)
             except ImageException:
                 try:
-                    self.r_dont_request.search_click_clear(1)
                     self.adventure_i.search_click(5)
                 except ImageException:
                     self.r_friends_ok.search_click(2)
@@ -439,17 +434,21 @@ class Dungeon(Base):
                 raise
         self._depart_end()
 
-    def depart_bonus(self):
+    def depart_bonus(self, use_lapis=True):
         self.adventure_i.search_click(3)
         try:
             self.next_i.search_click(3)
         except ImageException:
-            self.use_lapis_i.search_click(3)
-            self.yes_i.search_click(3)
-        self.next_i.search_click(3)
+            if use_lapis:
+                self.use_lapis_i.search_click(3)
+                self.yes_i.search_click(3)
+                self.next_i.search_click(3)
+            else:
+                raise
         for _ in range(4):
             try:
                 self.bonus_i.search(2)
+                break
             except ImageException:
                 self.next_i.drag(y=-400)
         try:
@@ -466,7 +465,7 @@ class Dungeon(Base):
         except ImageException:
             self.use_lapis_i.search_click(3)
             self.yes_i.search_click(3)
-        self.next_i.search_click(3)
+            self.next_i.search_click(3)
         unit_i = UnitIs.get(unit)
         unit_i.cache_enable = False
         for _ in range(6):
@@ -496,10 +495,10 @@ class Dungeon(Base):
         # self.r_items_obtained.search_click(5)
         self.r_items_obtained.search_click(10)
         self.r_next_2.search_click(10)
-        try:
-            self.r_dont_request.search_click(2)
-        except ImageException:
-            pass
+        # try:
+        #     self.r_dont_request.search_click(2)
+        # except ImageException:
+        #     pass
 
     def results_units(self):
         try:
@@ -530,9 +529,11 @@ class Dungeon(Base):
             self.r_error_ok.search_click(3)
             self.r_gil_i.search_click(10)
         self.cooldown()
-        self.r_unit_exp.search_click(2)
-        self.r_rank_exp.search_click_clear(2)
-
+        try:
+            self.r_unit_exp.search_click(2)
+            self.r_rank_exp.search_click_clear(2)
+        except ImageException:
+            pass
         self.r_damage_i.search_click(3)
         self.r_event_pt_i.search_click(3)
         self.r_total_i.search_click(3)
@@ -544,7 +545,8 @@ class Dungeon(Base):
         self.r_next_2.search_click(10)
         try:
             self.r_dont_request.search_click(2)
-        except ImageException:
+        # except ImageException:
+        except Exception:
             pass
 
     def repeat_results(self):
