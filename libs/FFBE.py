@@ -405,7 +405,7 @@ class Dungeon(Base):
                     self._depart_rank()
                     self.connecting_i.wait_cleared()
                 except ImageException:
-                    self.connection_error_i.search_click()
+                    # self.connection_error_i.search_click()
                     self.unit_data_ok_i.search_click()
                     self.connecting_i.wait_cleared()
 

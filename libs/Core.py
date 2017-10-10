@@ -32,6 +32,9 @@ class Executable(object):
             fh.close()
             os.rename(log_file, "%s.err" % now_str)
             pyautogui.screenshot("%s.png" % now_str)
+        else:
+            fh.close()
+            os.remove(log_file)
 
 if __name__ == '__main__':
     x = Executable()
