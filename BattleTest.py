@@ -4,10 +4,9 @@ from Main import *
 
 class Run(Main):
     def main(self):
-        taskbar_pin_i = Image("png\\memu\\taskbar_pin.png")
-        # taskbar_pin_i.search_click()
-        dungeon = Dungeon()
-        dungeon.r_gil_i.search()
+        i = Image("libs\\ffbe\\results\\results.png")
+        for a in range(30):
+            i.search_click()
         # test.search_click(3)
 
 if __name__ == '__main__':

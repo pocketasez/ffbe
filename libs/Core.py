@@ -34,6 +34,7 @@ class Executable(object):
             pyautogui.screenshot("%s.png" % now_str)
         else:
             fh.close()
+            logger.removeHandler(fh)
             os.remove(log_file)
 
 if __name__ == '__main__':
