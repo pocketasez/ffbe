@@ -7,16 +7,18 @@ class Run(Main):
         battle = Battle()
         dungeon = Dungeon()
         dungeon.adventure_i = DepartureIs.get("25_5")
-        hein_i = Image("tmp\\hein.png")
+        boss_i = Image("tmp\\magitek.png")
 
         while True:
             dungeon.depart_bonus(False)
             battle.setup()
-            battle.ability(0, -400, "deshell")
-            battle.ability(1, -200, "shell", 3)
-            battle.ability(2, -400, "shell", 4)
-            battle.ability(3, -400, "frost_flash")
+            battle.ability(0, -400, "imperil")
+            battle.ability(1, -100, "deprotect")
+            battle.ability(2, 0, "protect", 4)
+            battle.ability(3, -400, "deshell")
             battle.ability(4, -400, "frost_flash")
+            battle.guard(5)
+
             # try:
             #     battle.ability(5, -400, "divine_ruination")
             # except ImageException:
@@ -26,14 +28,12 @@ class Run(Main):
             while True:
                 battle.setup()
                 try:
-                    hein_i.search()
+                    boss_i.search()
                     break
                 except ImageException:
                     battle.repeat()
 
-            battle.ability(3, -400, "frost_flower_blitz")
             battle.ability(4, -400, "frost_flower_blitz")
-            battle.engage(3)
             battle.engage(4)
             battle.repeat()
 
