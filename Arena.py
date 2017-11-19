@@ -41,6 +41,7 @@ class Run(Main):
                 try:
                     # self.battle.ability(3, -160, "meteor")
                     self.battle.dual_ability(3, -400, "dual_black_magic", 210, "meteor")
+                    # self.battle.ability(3, -400, "wicked_light")
                     # self.battle.ability(3, -400, "earth_shaker")
                     # self.battle.ability(3, -400, "aero_blitz")
                 except ImageException:
@@ -48,6 +49,7 @@ class Run(Main):
                 try:
                     # self.battle.ability(4, -160, "meteor")
                     self.battle.dual_ability(4, -400, "dual_black_magic", 210, "meteor")
+                    # self.battle.ability(4, -400, "wicked_light")
                     # self.battle.ability(4, -400, "earth_shaker")
                     # self.battle.ability(4, -400, "aero_blitz")
                 except ImageException:

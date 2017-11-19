@@ -14,7 +14,7 @@ class Run(Main):
             battle.setup()
             battle.ability(0, -400, "imperil")
             battle.ability(1, -100, "deprotect")
-            battle.ability(2, 0, "protect", 4)
+            battle.ability(2, -100, "protect", 4)
             battle.ability(3, -400, "deshell")
             battle.ability(4, -400, "frost_flash")
             battle.guard(5)

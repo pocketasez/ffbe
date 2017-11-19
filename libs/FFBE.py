@@ -437,7 +437,7 @@ class Dungeon(Base):
     def depart_bonus(self, use_lapis=True):
         self.adventure_i.search_click(3)
         try:
-            self.next_i.search_click(3)
+            self.next_i.search_click_clear(3)
         except ImageException:
             if use_lapis:
                 self.use_lapis_i.search_click(3)
